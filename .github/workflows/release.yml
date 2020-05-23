@@ -1,0 +1,39 @@
+
+name: ReleaseCI
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - release-[0-9]+
+    - rc-[0-9]+
+    - dev-[0-9]+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: eisengrind/altv-voice-server
+    steps:
+    - uses: actions/checkout@v2
+      name: checkout
+    - name: install deps
+      run: sudo apt-get update && sudo apt-get install -y jq wget
+    - name: build & push voice server images
+      run: |
+        echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+        tag=${GITHUB_REF##*/}
+        splitTag=(${tag//-/ })
+        BRANCH=${splitTag[0]}
+        BUILD=${splitTag[1]}
+
+        # stable does not exist yet
+        docker build . --build-arg BRANCH=$BRANCH -t $IMAGE:$BUILD
+        docker tag $IMAGE:$BUILD $IMAGE:$BRANCH
+
+        docker push $IMAGE:$BUILD
+        docker push $IMAGE:$BRANCH
+
+        docker logout
