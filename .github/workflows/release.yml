@@ -6,9 +6,9 @@ on:
     branches:
     - master
     tags:
-    - release-[0-9]+
-    - rc-[0-9]+
-    - dev-[0-9]+
+    - 'release-[0-9]+'
+    - 'rc-[0-9]+'
+    - 'dev-[0-9]+'
 
 jobs:
   build:
