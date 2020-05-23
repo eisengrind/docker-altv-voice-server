@@ -24,14 +24,14 @@ jobs:
     - name: build voice server images
       run: |
         echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-        for BRANCH in dev stable rc release
+        for ALTV_BRANCH in dev stable rc release
         do
-          BUILD=$(wget --no-cache -qO- http://cdn.altv.mp/voice-server/${BRANCH}/x64_linux/update-info.json | jq '.latestBuildNumber')
-          docker build . --build-arg BRANCH=$BRANCH -t $IMAGE:$BUILD
-          docker tag $IMAGE:$BUILD $IMAGE:$BRANCH
+          ALTV_BUILD=$(wget --no-cache -qO- http://cdn.altv.mp/voice-server/${ALTV_BRANCH}/x64_linux/update-info.json | jq '.latestBuildNumber')
+          docker build . --build-arg BRANCH=$ALTV_BRANCH -t $IMAGE:$ALTV_BUILD
+          docker tag $IMAGE:$ALTV_BUILD $IMAGE:$ALTV_BRANCH
           
-          docker push $IMAGE:$BUILD
-          docker push $IMAGE:$BRANCH
+          docker push $IMAGE:$ALTV_BUILD
+          docker push $IMAGE:$ALTV_BRANCH
         done
         docker logout
       env:
