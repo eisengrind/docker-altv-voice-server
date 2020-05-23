@@ -25,15 +25,18 @@ jobs:
       run: |
         echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-        for ALTV_BRANCH in dev stable rc release
+        # stable does not exist yet
+        for BRANCH in dev rc release
         do
-          ALTV_BUILD=$(wget --no-cache -qO- http://cdn.altv.mp/voice-server/${ALTV_BRANCH}/x64_linux/update-info.json | jq '.latestBuildNumber')
-          # docker build . --build-arg BRANCH=$ALTV_BRANCH -t $IMAGE:$ALTV_BUILD
-          # docker tag $IMAGE:$ALTV_BUILD $IMAGE:$ALTV_BRANCH
-          echo "$ALTV_BRANCH $ALTV_BUILD"
-          # docker push $IMAGE:$ALTV_BUILD
-          # docker push $IMAGE:$ALTV_BRANCH
+          BUILD=$(wget --no-cache -qO- http://cdn.altv.mp/voice-server/${BRANCH}/x64_linux/update-info.json | jq '.latestBuildNumber')
+
+          docker build . --build-arg BRANCH=$BRANCH -t $IMAGE:$BUILD
+          docker tag $IMAGE:$BUILD $IMAGE:$BRANCH
+  
+          docker push $IMAGE:$BUILD
+          docker push $IMAGE:$BRANCH
         done
+
         docker logout
       env:
         IMAGE: eisengrind/altv-voice-server
