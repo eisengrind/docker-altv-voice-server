@@ -3,8 +3,6 @@ name: ReleaseCI
 
 on:
   push:
-    branches:
-    - master
     tags:
     - 'release-[0-9]+'
     - 'rc-[0-9]+'
@@ -12,6 +10,7 @@ on:
 
 jobs:
   build:
+    if: github.event.base_ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
       IMAGE: eisengrind/altv-voice-server
