@@ -1,6 +1,6 @@
 <p align="center"><img src=".github/assets/logo-256px.png"></p>
 <p align="center">
-<a href="https://travis-ci.com/eisengrind/docker-altv-voice-server"><img src="https://travis-ci.com/eisengrind/docker-altv-voice-server.svg?branch=master"></a>
+<a href="https://github.com/eisengrind/docker-altv-voice-server/actions"><img src="https://img.shields.io/github/workflow/status/eisengrind/docker-altv-voice-server/DefaultCI"></a>
 </p>
 
 <h1 align="center">Unofficial alt:V voice server Docker image</h1>
