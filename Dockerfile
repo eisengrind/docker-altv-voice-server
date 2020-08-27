@@ -8,7 +8,7 @@ COPY ./.docker/scripts/entrypoint.sh /root/
 WORKDIR /opt/altv/
 
 RUN apt-get update && \
-    apt-get install -y wget && \
+    apt-get install -y wget libatomic1 && \
 #
     wget --no-cache -q -O ./altv-voice-server http://cdn.altv.mp/voice-server/${BRANCH}/x64_linux/altv-voice-server && \
 #
