@@ -61,6 +61,16 @@ This is why we provide specific tags. Those kind of tags do explicitly not lead 
 
 **tl;dr Keep in mind that you should always specify a specific tag in a Dockerfile.**
 
+### Note on Docker image security
+
+Since this images inherits from the `debian:buster-slim` image, we schedule nightly builds every 24 hours to reduce security invulnerabilities.
+
+We highly recommend to update the altv-server image as frequent as possible.
+
+Keep in mind that, because of the frequent updates, we overwrite the image tags `release`, `dev`, `rc` aswell as their build versions.
+
+To use a specific image, we recommend using their Sha-256 digest hash as an image selector.
+
 ## License
 
 See the [LICENSE](https://github.com/eisengrind/docker-altv-voice-server/blob/master/LICENSE)-file for further information.

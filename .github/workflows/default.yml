@@ -2,9 +2,12 @@ name: DefaultCI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
     branches: []
+  schedule:
+    - cron: "0 2 * * *"
+    - cron: "0 14 * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -18,25 +21,20 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-      name: checkout
-    - name: install deps
-      run: sudo apt-get update && sudo apt-get install -y jq wget
-    - name: build & push voice server images
-      run: |
-        echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-        # stable does not exist yet
-        for BRANCH in dev rc release
-        do
-          BUILD=$(wget --no-cache -qO- http://cdn.altv.mp/voice-server/${BRANCH}/x64_linux/update-info.json | jq '.latestBuildNumber')
-
-          docker build . --build-arg BRANCH=$BRANCH -t $IMAGE:$BUILD
-          docker tag $IMAGE:$BUILD $IMAGE:$BRANCH
-  
-          docker push $IMAGE:$BUILD
-          docker push $IMAGE:$BRANCH
-        done
-
-        docker logout
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        name: checkout
+      - name: install deps
+        run: sudo apt-get update && sudo apt-get install -y jq wget
+      - name: set script permissions
+        run: chmod +x ./scripts/push.sh ./scripts/getVersion.sh
+      - name: login to DockerHub
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: build dev
+        run: ./scripts/push.sh $IMAGE dev $(./scripts/getVersion.sh dev)
+      - name: build rc
+        run: ./scripts/push.sh $IMAGE rc $(./scripts/getVersion.sh rc)
+      - name: build release
+        run: ./scripts/push.sh $IMAGE release $(./scripts/getVersion.sh release)
+      - name: logout from DockerHub
+        run: docker logout
