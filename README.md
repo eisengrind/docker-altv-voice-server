@@ -37,18 +37,6 @@ docker run --rm -it -e ALTV_VOICE_SERVER_SECRET=123456789 eisengrind/altv-voice-
 
 sets the voice server secret to `123456789`. See the [Docker documentation on environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file).
 
-## Build
-
-For the `$build` and `$branch` variables you have to enter the regarding alt:V versioning values.
-
-**`$build`** represents the build number of the voice server binary. E.g. **`$build=1181`**
-
-**`$branch`** represents the branch where the voice server binary was released. E.g. **`$branch=release`**.
-
-```sh
-docker build . --build-arg BRANCH=$branch -t eisengrind/altv-voice-server:$build
-```
-
 ### Note on Docker caching
 
 We provide two different kinds of tags for the alt:V Docker images: specific and non-specific image tags.
