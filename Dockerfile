@@ -18,7 +18,6 @@ WORKDIR /build/
 
 RUN apt-get update
 RUN apt-get install -y wget
-RUN wget --no-cache -q -O ./update.json https://cdn.alt-mp.com/voice-server/${BRANCH}/x64_linux/update.json
 RUN wget --no-cache -q -O ./altv-voice-server https://cdn.alt-mp.com/voice-server/${BRANCH}/x64_linux/altv-voice-server
 
 
